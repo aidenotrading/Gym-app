@@ -827,7 +827,14 @@
       font-weight: 750;
     }
 
-    .history-delete { width: 100%; margin-top: 13px; }
+    .history-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 13px;
+    }
+
+    .history-actions button { width: 100%; min-width: 0; }
 
     .tab-bar {
       position: fixed;
@@ -965,16 +972,19 @@
       font-weight: 700;
     }
 
-    .modal-rest-inputs {
+    .modal-rest-inputs,
+    .modal-duration-inputs {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-top: 18px;
     }
 
-    .modal-rest-inputs[hidden] { display: none; }
+    .modal-rest-inputs[hidden],
+    .modal-duration-inputs[hidden] { display: none; }
 
-    .modal-rest-inputs label {
+    .modal-rest-inputs label,
+    .modal-duration-inputs label {
       color: var(--muted);
       font-size: 12px;
       font-weight: 800;
@@ -982,7 +992,8 @@
       text-transform: uppercase;
     }
 
-    .modal-rest-inputs input {
+    .modal-rest-inputs input,
+    .modal-duration-inputs input {
       width: 100%;
       min-width: 0;
       height: 58px;
@@ -1000,7 +1011,9 @@
     }
 
     .modal-rest-inputs input::-webkit-inner-spin-button,
-    .modal-rest-inputs input::-webkit-outer-spin-button { margin: 0; -webkit-appearance: none; }
+    .modal-rest-inputs input::-webkit-outer-spin-button,
+    .modal-duration-inputs input::-webkit-inner-spin-button,
+    .modal-duration-inputs input::-webkit-outer-spin-button { margin: 0; -webkit-appearance: none; }
 
     .modal-actions {
       display: grid;
@@ -1073,7 +1086,7 @@
         <div class="page-heading">
           <p class="eyebrow">Training log</p>
           <h1 id="historyTitle">History</h1>
-          <p class="subheading">Workouts are grouped into calendar weeks. Open a week, then a workout, to review every completed set.</p>
+          <p class="subheading">Workouts are grouped into calendar weeks. Open a workout to review its sets or correct its duration.</p>
         </div>
         <div class="card-list" id="historyList"></div>
       </section>
@@ -1100,6 +1113,10 @@
         <div class="modal-rest-inputs" id="modalRestInputs" hidden>
           <label>Minutes<input id="modalRestMinutes" type="number" inputmode="numeric" min="0" max="60" step="1" placeholder="0"></label>
           <label>Seconds<input id="modalRestSeconds" type="number" inputmode="numeric" min="0" max="59" step="1" placeholder="0"></label>
+        </div>
+        <div class="modal-duration-inputs" id="modalDurationInputs" hidden>
+          <label>Hours<input id="modalDurationHours" type="number" inputmode="numeric" min="0" max="168" step="1" placeholder="0"></label>
+          <label>Minutes<input id="modalDurationMinutes" type="number" inputmode="numeric" min="0" max="59" step="1" placeholder="0"></label>
         </div>
         <div class="modal-actions">
           <button class="quiet" id="modalCancel" type="button">Cancel</button>
@@ -1322,6 +1339,9 @@
         var restInputs = document.getElementById("modalRestInputs");
         var restMinutes = document.getElementById("modalRestMinutes");
         var restSeconds = document.getElementById("modalRestSeconds");
+        var durationInputs = document.getElementById("modalDurationInputs");
+        var durationHours = document.getElementById("modalDurationHours");
+        var durationMinutes = document.getElementById("modalDurationMinutes");
         var confirmButton = document.getElementById("modalConfirm");
         modalMode = options.mode || "confirm";
         modalLastFocus = document.activeElement;
@@ -1332,6 +1352,7 @@
         confirmButton.className = options.danger ? "danger" : "primary";
         inputLabel.hidden = modalMode !== "text";
         restInputs.hidden = modalMode !== "rest";
+        durationInputs.hidden = modalMode !== "duration";
         document.getElementById("modalInputText").textContent = options.inputLabel || "Name";
         input.inputMode = options.inputMode || "text";
         input.placeholder = options.placeholder || "";
@@ -1340,6 +1361,9 @@
         var customRestSeconds = Math.max(0, Math.round(Number(options.restSeconds) || 0));
         restMinutes.value = customRestSeconds ? String(Math.floor(customRestSeconds / 60)) : "";
         restSeconds.value = customRestSeconds ? String(customRestSeconds % 60) : "";
+        var totalDurationMinutes = Math.max(0, Math.round((Number(options.durationSeconds) || 0) / 60));
+        durationHours.value = String(Math.floor(totalDurationMinutes / 60));
+        durationMinutes.value = String(totalDurationMinutes % 60);
         overlay.hidden = false;
         document.body.classList.add("modal-open");
         window.setTimeout(function () {
@@ -1349,6 +1373,9 @@
           } else if (modalMode === "rest") {
             restMinutes.focus();
             restMinutes.select();
+          } else if (modalMode === "duration") {
+            durationHours.focus();
+            durationHours.select();
           } else {
             confirmButton.focus();
           }
@@ -1361,6 +1388,8 @@
         var input = document.getElementById("modalInput");
         var restMinutes = document.getElementById("modalRestMinutes");
         var restSeconds = document.getElementById("modalRestSeconds");
+        var durationHours = document.getElementById("modalDurationHours");
+        var durationMinutes = document.getElementById("modalDurationMinutes");
         if (confirmed && modalMode === "text" && !input.value.trim()) {
           input.focus();
           return;
@@ -1376,9 +1405,23 @@
             return;
           }
         }
+        var workoutDurationTotal = null;
+        if (confirmed && modalMode === "duration") {
+          var hoursValue = durationHours.value.trim() ? Number(durationHours.value) : 0;
+          var durationMinutesValue = durationMinutes.value.trim() ? Number(durationMinutes.value) : 0;
+          var workoutDurationMinutes = hoursValue * 60 + durationMinutesValue;
+          workoutDurationTotal = workoutDurationMinutes * 60;
+          if (!Number.isInteger(hoursValue) || !Number.isInteger(durationMinutesValue) || hoursValue < 0 || durationMinutesValue < 0 || durationMinutesValue > 59 || workoutDurationMinutes < 1 || workoutDurationMinutes > 10080) {
+            alert("Choose a workout duration between 1 minute and 7 days. Minutes must be from 0 to 59.");
+            durationHours.focus();
+            return;
+          }
+        }
         var result = modalMode === "text"
           ? (confirmed ? input.value.trim().slice(0, 80) : null)
-          : (modalMode === "rest" ? (confirmed ? customRestTotal : null) : Boolean(confirmed));
+          : (modalMode === "rest"
+            ? (confirmed ? customRestTotal : null)
+            : (modalMode === "duration" ? (confirmed ? workoutDurationTotal : null) : Boolean(confirmed)));
         var resolve = modalResolver;
         modalResolver = null;
         document.getElementById("modalOverlay").hidden = true;
@@ -1416,6 +1459,16 @@
           message: "Choose any rest time from 10 seconds to 60 minutes.",
           restSeconds: currentSeconds || 0,
           confirmLabel: "Use this time"
+        });
+      }
+
+      function promptForWorkoutDuration(currentSeconds) {
+        return openModal({
+          mode: "duration",
+          title: "Edit workout duration",
+          message: "Enter how long the workout actually took. This will also correct its finish time and calendar week.",
+          durationSeconds: currentSeconds || 0,
+          confirmLabel: "Save duration"
         });
       }
 
@@ -1749,7 +1802,7 @@
           '<span class="count-chip">' + escapeHtml(formatDuration(session.durationSeconds)) + '</span>';
         return '<article class="card history-card"><details>' +
           '<summary><div class="card-title-wrap"><h2>' + escapeHtml(session.routineName) + '</h2><p class="meta">' + escapeHtml(formatDate(session.completedAt)) + '</p><div class="history-sets" style="margin-top: 9px">' + stats + '</div></div></summary>' +
-          '<div class="history-content">' + exercises + '<button class="danger history-delete" type="button" data-action="delete-session" data-session-id="' + escapeHtml(session.id) + '">Delete this workout</button></div>' +
+          '<div class="history-content">' + exercises + '<div class="history-actions"><button class="secondary" type="button" data-action="edit-session-duration" data-session-id="' + escapeHtml(session.id) + '">Edit duration</button><button class="danger" type="button" data-action="delete-session" data-session-id="' + escapeHtml(session.id) + '">Delete workout</button></div></div>' +
         '</details></article>';
       }
 
@@ -2138,6 +2191,20 @@
 
         if (action === "finish-workout") {
           await finishWorkout();
+          return;
+        }
+
+        if (action === "edit-session-duration") {
+          var durationSessionId = button.getAttribute("data-session-id");
+          var durationSession = data.history.find(function (item) { return item.id === durationSessionId; });
+          if (!durationSession) return;
+          var correctedDuration = await promptForWorkoutDuration(durationSession.durationSeconds);
+          if (correctedDuration === null) return;
+          durationSession.durationSeconds = correctedDuration;
+          var correctedFinishTime = new Date(new Date(durationSession.startedAt).getTime() + correctedDuration * 1000);
+          if (!isNaN(correctedFinishTime.getTime())) durationSession.completedAt = correctedFinishTime.toISOString();
+          saveData({ toast: "Workout duration updated" });
+          renderHistory();
           return;
         }
 
