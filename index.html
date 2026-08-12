@@ -596,13 +596,57 @@
     }
 
     .start-rest {
-      width: 100%;
+      flex: 1 1 180px;
       min-height: 46px;
       border: 1px solid rgba(183, 243, 74, .28);
       background: rgba(183, 243, 74, .07);
       color: var(--accent);
       font-size: 14px;
       font-weight: 850;
+    }
+
+    .set-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .drop-set-toggle {
+      flex: 0 0 auto;
+      min-height: 46px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      background: #0f1215;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .drop-set-toggle::before {
+      display: inline-grid;
+      width: 19px;
+      height: 19px;
+      margin-right: 7px;
+      place-items: center;
+      border: 1px solid #48515a;
+      border-radius: 6px;
+      content: "";
+      vertical-align: -4px;
+    }
+
+    .drop-set-toggle.active {
+      border-color: rgba(183, 243, 74, .4);
+      background: var(--accent-dark);
+      color: var(--accent);
+    }
+
+    .drop-set-toggle.active::before {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #0b0e06;
+      content: "✓";
+      font-size: 13px;
+      font-weight: 950;
     }
 
     .one-time-badge {
@@ -649,12 +693,8 @@
     }
 
     .finish-wrap {
-      position: sticky;
-      z-index: 10;
-      bottom: calc(78px + env(safe-area-inset-bottom));
-      margin: 20px -4px 0;
-      padding: 12px 4px;
-      background: linear-gradient(to top, var(--bg) 68%, transparent);
+      margin: 20px 0 0;
+      padding: 0;
     }
 
     .finish-button {
@@ -1024,7 +1064,7 @@
         <div class="page-heading">
           <p class="eyebrow">In progress</p>
           <h1 id="activeTitle">Active Workout</h1>
-          <p class="subheading">Your entries save automatically after every change. RPE is optional from 1–10.</p>
+          <p class="subheading">Your entries save automatically after every change. RPE and drop sets are optional.</p>
         </div>
         <div id="activeContent"></div>
       </section>
@@ -1164,7 +1204,8 @@
         return {
           weight: set && set.weight !== undefined && set.weight !== null ? String(set.weight) : "",
           reps: set && set.reps !== undefined && set.reps !== null ? String(set.reps) : "",
-          rpe: set && set.rpe !== undefined && set.rpe !== null ? String(set.rpe) : ""
+          rpe: set && set.rpe !== undefined && set.rpe !== null ? String(set.rpe) : "",
+          dropSet: Boolean(set && (set.dropSet || set.isDropSet))
         };
       }
 
@@ -1488,7 +1529,7 @@
         var previous = getPreviousExercise(exercise);
         if (!previous) return '<div class="previous"><strong>Previous</strong>No completed sets yet</div>';
         var summary = previous.sets.map(function (set, index) {
-          return "Set " + (index + 1) + ": " + escapeHtml(set.weight) + " kg × " + escapeHtml(set.reps) + (set.rpe ? " · RPE " + escapeHtml(set.rpe) : "");
+          return "Set " + (index + 1) + ": " + escapeHtml(set.weight) + " kg × " + escapeHtml(set.reps) + (set.rpe ? " · RPE " + escapeHtml(set.rpe) : "") + (set.dropSet ? " · Drop set" : "");
         }).join(" · ");
         return '<div class="previous"><strong>Previous</strong>' + summary + '</div>';
       }
@@ -1601,13 +1642,14 @@
           var oneTimeRemove = exercise.oneTime ? '<button class="remove-one-time" type="button" data-action="remove-one-time-exercise" data-exercise-index="' + exerciseIndex + '">Remove</button>' : '';
           var sets = exercise.sets.map(function (set, setIndex) {
             var restAction = restSeconds ? '<button class="start-rest" type="button" data-action="start-rest-timer" data-exercise-index="' + exerciseIndex + '" data-set-index="' + setIndex + '">Finish set &amp; start ' + restLabel + ' rest</button>' : '';
+            var dropSetAction = '<button class="drop-set-toggle' + (set.dropSet ? ' active' : '') + '" type="button" data-action="toggle-drop-set" data-exercise-index="' + exerciseIndex + '" data-set-index="' + setIndex + '" aria-pressed="' + Boolean(set.dropSet) + '">Drop set</button>';
             return '<div class="set-row-wrap"><div class="set-row">' +
                 '<span class="set-number">' + (setIndex + 1) + '</span>' +
                 '<label><span class="visually-hidden">' + escapeHtml(exercise.name) + ' set ' + (setIndex + 1) + ' weight in kilograms</span><input class="set-input" type="number" inputmode="decimal" min="0" step="any" placeholder="0" data-field="weight" data-exercise-index="' + exerciseIndex + '" data-set-index="' + setIndex + '" value="' + escapeHtml(set.weight) + '"></label>' +
                 '<label><span class="visually-hidden">' + escapeHtml(exercise.name) + ' set ' + (setIndex + 1) + ' reps</span><input class="set-input" type="number" inputmode="numeric" min="1" step="1" placeholder="0" data-field="reps" data-exercise-index="' + exerciseIndex + '" data-set-index="' + setIndex + '" value="' + escapeHtml(set.reps) + '"></label>' +
                 '<label><span class="visually-hidden">' + escapeHtml(exercise.name) + ' set ' + (setIndex + 1) + ' RPE from 1 to 10</span><input class="set-input" type="number" inputmode="decimal" min="1" max="10" step="0.5" placeholder="—" data-field="rpe" data-exercise-index="' + exerciseIndex + '" data-set-index="' + setIndex + '" value="' + escapeHtml(set.rpe) + '"></label>' +
                 '<button class="remove-set" type="button" data-action="remove-set" data-exercise-index="' + exerciseIndex + '" data-set-index="' + setIndex + '" aria-label="Delete set ' + (setIndex + 1) + '">×</button>' +
-              '</div>' + restAction + '</div>';
+              '</div><div class="set-options">' + dropSetAction + restAction + '</div></div>';
           }).join("");
 
           return '<article class="card exercise-card">' +
@@ -1695,7 +1737,7 @@
       function renderHistorySession(session) {
         var exercises = session.exercises.map(function (exercise) {
           var sets = exercise.sets.map(function (set, index) {
-            return '<span class="set-chip">' + (index + 1) + '. ' + escapeHtml(set.weight) + ' kg × ' + escapeHtml(set.reps) + (set.rpe ? ' · RPE ' + escapeHtml(set.rpe) : '') + '</span>';
+            return '<span class="set-chip">' + (index + 1) + '. ' + escapeHtml(set.weight) + ' kg × ' + escapeHtml(set.reps) + (set.rpe ? ' · RPE ' + escapeHtml(set.rpe) : '') + (set.dropSet ? ' · Drop set' : '') + '</span>';
           }).join("");
           var extraBadge = exercise.oneTime ? '<span class="one-time-badge">One-time</span>' : '';
           return '<div class="history-exercise"><h3>' + escapeHtml(exercise.name) + extraBadge + '</h3><div class="history-sets">' + (sets || '<span class="set-chip">Completed</span>') + '</div></div>';
@@ -1773,7 +1815,7 @@
           startedAt: new Date().toISOString(),
           restTimerEndAt: null,
           exercises: routine.exercises.map(function (exercise) {
-            return { exerciseId: exercise.id, name: exercise.name, sets: [{ weight: "", reps: "", rpe: "" }] };
+            return { exerciseId: exercise.id, name: exercise.name, sets: [{ weight: "", reps: "", rpe: "", dropSet: false }] };
           })
         };
         saveData({ toast: routine.name + " started" });
@@ -1803,7 +1845,7 @@
               if (!invalidMessage) invalidMessage = exercise.name + ", set " + (setIndex + 1) + ", needs an RPE between 1 and 10.";
               return;
             }
-            completedSets.push({ weight: weight, reps: reps, rpe: rpe });
+            completedSets.push({ weight: weight, reps: reps, rpe: rpe, dropSet: Boolean(set.dropSet) });
           });
           if (completedSets.length || exercise.oneTime) {
             completedExercises.push({ exerciseId: exercise.exerciseId, name: exercise.name, oneTime: Boolean(exercise.oneTime), sets: completedSets });
@@ -1994,7 +2036,7 @@
             exerciseId: makeId("one_time"),
             name: oneTimeName,
             oneTime: true,
-            sets: [{ weight: "", reps: "", rpe: "" }]
+            sets: [{ weight: "", reps: "", rpe: "", dropSet: false }]
           });
           saveData({ toast: oneTimeName + " added for today" });
           renderActive();
@@ -2050,10 +2092,24 @@
           return;
         }
 
+        if (action === "toggle-drop-set" && data.activeWorkout) {
+          var dropExerciseIndex = Number(button.getAttribute("data-exercise-index"));
+          var dropSetIndex = Number(button.getAttribute("data-set-index"));
+          var dropExercise = data.activeWorkout.exercises[dropExerciseIndex];
+          var selectedSet = dropExercise && dropExercise.sets[dropSetIndex];
+          if (!selectedSet) return;
+          selectedSet.dropSet = !selectedSet.dropSet;
+          saveData();
+          button.classList.toggle("active", selectedSet.dropSet);
+          button.setAttribute("aria-pressed", String(selectedSet.dropSet));
+          showToast(selectedSet.dropSet ? "Marked as a drop set" : "Drop set removed");
+          return;
+        }
+
         if (action === "add-set" && data.activeWorkout) {
           var addExerciseIndex = Number(button.getAttribute("data-exercise-index"));
           if (!data.activeWorkout.exercises[addExerciseIndex]) return;
-          data.activeWorkout.exercises[addExerciseIndex].sets.push({ weight: "", reps: "", rpe: "" });
+          data.activeWorkout.exercises[addExerciseIndex].sets.push({ weight: "", reps: "", rpe: "", dropSet: false });
           saveData();
           renderActive();
           return;
