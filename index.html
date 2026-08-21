@@ -45,7 +45,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    button, input, select { font: inherit; }
+    button, input, select, textarea { font: inherit; }
 
     button {
       min-height: 46px;
@@ -56,7 +56,7 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    button:focus-visible, input:focus-visible, summary:focus-visible {
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible {
       outline: 3px solid rgba(183, 243, 74, .55);
       outline-offset: 2px;
     }
@@ -733,6 +733,200 @@
       line-height: 1.45;
     }
 
+    .quick-extra-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 9px;
+      margin-bottom: 9px;
+    }
+
+    .quick-extra-row select,
+    .progress-select,
+    .weight-field input {
+      width: 100%;
+      min-width: 0;
+      height: 54px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #0d1013;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 750;
+    }
+
+    .quick-extra-row button { min-width: 72px; }
+
+    .one-time-new { width: 100%; }
+
+    .progress-grid { display: grid; gap: 14px; }
+
+    .progress-card { padding: 17px; }
+
+    .progress-card > h2 { margin-bottom: 5px; }
+
+    .progress-select { margin-top: 14px; }
+
+    .progress-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .progress-stat {
+      min-width: 0;
+      padding: 11px 8px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #0f1215;
+      text-align: center;
+    }
+
+    .progress-stat span {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    .progress-stat strong {
+      display: block;
+      color: var(--text);
+      font-size: clamp(15px, 4.5vw, 20px);
+      font-weight: 900;
+      overflow-wrap: normal;
+    }
+
+    .progress-stat .positive { color: var(--accent); }
+
+    .lift-chart {
+      display: grid;
+      height: 220px;
+      min-width: 0;
+      grid-template-columns: repeat(var(--point-count), minmax(0, 1fr));
+      align-items: end;
+      gap: 7px;
+      margin-top: 16px;
+      padding: 10px 4px 0;
+      border-bottom: 1px solid var(--line);
+      background: repeating-linear-gradient(to top, transparent 0, transparent 53px, rgba(42, 48, 54, .42) 54px, transparent 55px);
+    }
+
+    .lift-point {
+      display: grid;
+      height: 100%;
+      min-width: 0;
+      grid-template-rows: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 7px;
+    }
+
+    .lift-bar-wrap {
+      display: flex;
+      height: 100%;
+      min-width: 0;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .lift-bar {
+      position: relative;
+      width: min(100%, 38px);
+      min-height: 30px;
+      border-radius: 8px 8px 3px 3px;
+      background: linear-gradient(to top, #7eaa2f, var(--accent));
+      box-shadow: 0 7px 20px rgba(183, 243, 74, .13);
+    }
+
+    .lift-bar strong {
+      position: absolute;
+      top: -19px;
+      left: 50%;
+      color: var(--text);
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      transform: translateX(-50%);
+    }
+
+    .lift-point time {
+      min-width: 0;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 750;
+      line-height: 1.15;
+      text-align: center;
+    }
+
+    .weight-form {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 9px;
+      margin-top: 15px;
+    }
+
+    .weight-field {
+      min-width: 0;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .weight-field input { margin-top: 7px; text-transform: none; }
+
+    .weight-form button { grid-column: 1 / -1; }
+
+    .weight-summary {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+      padding: 14px;
+      border: 1px solid rgba(183, 243, 74, .17);
+      border-radius: 13px;
+      background: rgba(183, 243, 74, .055);
+    }
+
+    .weight-summary strong { font-size: 25px; }
+
+    .weight-summary span { color: var(--muted); font-size: 13px; }
+
+    .weight-list { display: grid; gap: 7px; margin-top: 12px; }
+
+    .weight-entry {
+      display: grid;
+      min-width: 0;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px 9px 13px;
+      border: 1px solid #242a30;
+      border-radius: 12px;
+      background: rgba(8, 10, 12, .3);
+    }
+
+    .weight-entry time { color: var(--muted); font-size: 13px; }
+
+    .weight-entry strong { font-size: 15px; }
+
+    .weight-entry button {
+      width: 42px;
+      min-width: 42px;
+      min-height: 42px;
+      padding: 0;
+      border: 1px solid rgba(255, 107, 107, .17);
+      background: rgba(255, 107, 107, .05);
+      color: var(--danger);
+      font-size: 18px;
+    }
+
     .finish-wrap {
       margin: 20px 0 0;
       padding: 0;
@@ -920,7 +1114,7 @@
       display: grid;
       width: 100%;
       max-width: 740px;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 4px;
     }
 
@@ -932,7 +1126,7 @@
       border-radius: 0;
       background: transparent;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
     }
 
@@ -1108,6 +1302,7 @@
       .toolbar .primary { grid-column: auto; }
       .routine-card, .exercise-card { padding: 21px; }
       .exercise-actions { grid-template-columns: repeat(4, 1fr); }
+      .weight-form { grid-template-columns: 1fr 1fr; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1155,13 +1350,23 @@
         </div>
         <div class="card-list" id="historyList"></div>
       </section>
+
+      <section class="view" id="progressView" data-view="progress" aria-labelledby="progressTitle" hidden>
+        <div class="page-heading">
+          <p class="eyebrow">Your results</p>
+          <h1 id="progressTitle">Progress</h1>
+          <p class="subheading">Track your body weight and see the heaviest weight you completed for each lift over time.</p>
+        </div>
+        <div id="progressContent"></div>
+      </section>
     </main>
   </div>
 
   <nav class="tab-bar" aria-label="Main navigation">
     <div class="tab-inner">
       <button class="tab active" type="button" data-tab="workouts" aria-current="page">Workouts</button>
-      <button class="tab" id="activeTab" type="button" data-tab="active">Active Workout</button>
+      <button class="tab" id="activeTab" type="button" data-tab="active">Active</button>
+      <button class="tab" type="button" data-tab="progress">Progress</button>
       <button class="tab" type="button" data-tab="history">History</button>
     </div>
   </nav>
@@ -1205,6 +1410,7 @@
       var modalMode = "confirm";
       var modalLastFocus = null;
       var openExerciseMenuKey = null;
+      var selectedProgressExercise = "";
       var data = loadData();
 
       function makeId(prefix) {
@@ -1251,6 +1457,7 @@
           ],
           settings: { restSeconds: 0 },
           history: [],
+          bodyWeights: [],
           activeWorkout: null
         };
       }
@@ -1344,6 +1551,13 @@
           restSeconds: isFinite(requestedRestSeconds) && requestedRestSeconds >= 10 && requestedRestSeconds <= 3600 ? requestedRestSeconds : 0
         };
 
+        var bodyWeights = Array.isArray(input.bodyWeights) ? input.bodyWeights.map(function (entry) {
+          var entryDate = entry && typeof entry.date === "string" ? entry.date.slice(0, 10) : "";
+          var entryWeight = Number(entry && entry.weight);
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(entryDate) || isNaN(new Date(entryDate + "T12:00:00").getTime()) || !isFinite(entryWeight) || entryWeight <= 0 || entryWeight > 500) return null;
+          return { id: cleanId(entry && entry.id, "weight"), date: entryDate, weight: Math.round(entryWeight * 10) / 10 };
+        }).filter(Boolean) : [];
+
         var activeWorkout = null;
         if (input.activeWorkout && typeof input.activeWorkout === "object") {
           var active = input.activeWorkout;
@@ -1367,7 +1581,7 @@
           };
         }
 
-        return { version: DATA_VERSION, routines: routines, settings: settings, history: history, activeWorkout: activeWorkout };
+        return { version: DATA_VERSION, routines: routines, settings: settings, history: history, bodyWeights: bodyWeights, activeWorkout: activeWorkout };
       }
 
       function saveData(options) {
@@ -1647,11 +1861,29 @@
 
       function renderPrevious(exercise) {
         var previous = getPreviousExercise(exercise);
-        if (!previous) return '<div class="previous"><strong>Previous</strong>No completed sets yet</div>';
+        var label = exercise.oneTime ? "Previous extra" : "Previous";
+        if (!previous) return '<div class="previous"><strong>' + label + '</strong>No completed sets yet</div>';
         var summary = previous.sets.map(function (set, index) {
           return "Set " + (index + 1) + ": " + escapeHtml(set.weight) + " kg × " + escapeHtml(set.reps) + (set.rpe ? " · RPE " + escapeHtml(set.rpe) : "") + (set.dropSet ? " · Drop set" : "");
         }).join(" · ");
-        return '<div class="previous"><strong>Previous</strong>' + summary + '</div>';
+        return '<div class="previous"><strong>' + label + '</strong>' + summary + '</div>';
+      }
+
+      function getSavedOneTimeExercises() {
+        var saved = [];
+        var seen = {};
+        data.history.slice().sort(function (a, b) {
+          return new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime();
+        }).forEach(function (session) {
+          session.exercises.forEach(function (exercise) {
+            if (!exercise.oneTime) return;
+            var key = exercise.name.trim().toLowerCase();
+            if (!key || seen[key]) return;
+            seen[key] = true;
+            saved.push({ name: exercise.name, completedAt: session.completedAt });
+          });
+        });
+        return saved;
       }
 
       function formatCountdown(totalSeconds) {
@@ -1753,11 +1985,13 @@
         var workout = data.activeWorkout;
         var restSeconds = data.settings.restSeconds;
         var restLabel = formatCountdown(restSeconds);
+        var savedExtras = getSavedOneTimeExercises();
+        var savedExtraOptions = savedExtras.map(function (extra) {
+          return '<option value="' + escapeHtml(extra.name) + '">' + escapeHtml(extra.name) + '</option>';
+        }).join("");
         var elapsed = Math.max(0, Math.floor((Date.now() - new Date(workout.startedAt).getTime()) / 1000));
         var exerciseCards = workout.exercises.map(function (exercise, exerciseIndex) {
-          var exerciseInfo = exercise.oneTime
-            ? '<div class="previous"><strong>One-time extra</strong>Only part of this workout — your routine template will not change.</div>'
-            : renderPrevious(exercise);
+          var exerciseInfo = renderPrevious(exercise);
           var oneTimeBadge = exercise.oneTime ? '<span class="one-time-badge">One-time</span>' : '';
           var oneTimeRemove = exercise.oneTime ? '<button class="remove-one-time" type="button" data-action="remove-one-time-exercise" data-exercise-index="' + exerciseIndex + '">Remove</button>' : '';
           var sets = exercise.sets.map(function (set, setIndex) {
@@ -1792,7 +2026,7 @@
         '</div></section>' +
         '<div class="rest-timer-banner" id="restTimerBanner" role="timer" aria-live="polite" hidden><div class="rest-timer-copy"><span class="rest-timer-label">Rest</span><strong class="rest-timer-value" id="restTimerValue">0:00</strong></div><button class="quiet" type="button" data-action="skip-rest-timer">Skip</button></div>' +
         '<div class="card-list">' + exerciseCards + '</div>' +
-        '<div class="card one-time-add-wrap"><button class="secondary" type="button" data-action="add-one-time-exercise">+ Add one-time exercise</button><p>Useful for an extra ab movement, a run, or anything you do only today.</p></div>' +
+        '<div class="card one-time-add-wrap">' + (savedExtras.length ? '<div class="quick-extra-row"><label class="visually-hidden" for="savedOneTimeExercise">Choose a past one-time exercise</label><select id="savedOneTimeExercise"><option value="">Choose a past extra…</option>' + savedExtraOptions + '</select><button class="primary" type="button" data-action="add-saved-one-time">Add</button></div>' : '') + '<button class="secondary one-time-new" type="button" data-action="add-one-time-exercise">+ New one-time exercise</button><p>Past extras are saved here automatically. Reusing one shows what you did last time without changing your routine.</p></div>' +
         '<section class="card workout-notes"><label for="workoutNotes">Workout notes <span class="meta">(optional)</span></label><textarea id="workoutNotes" maxlength="2000" placeholder="How did the workout feel? Add reminders for next time…">' + escapeHtml(workout.notes || "") + '</textarea><p>Saved automatically and included in your workout history.</p></section>' +
         '<div class="finish-wrap"><button class="finish-button" type="button" data-action="finish-workout">Finish Workout</button></div>';
         updateRestTimerDisplay();
@@ -1900,10 +2134,121 @@
         }).join("");
       }
 
+      function formatWeightValue(value) {
+        var number = Number(value);
+        return Number.isInteger(number) ? String(number) : number.toFixed(1);
+      }
+
+      function formatShortDate(value) {
+        var date = new Date(String(value).slice(0, 10) + "T12:00:00");
+        try {
+          return new Intl.DateTimeFormat(undefined, { day: "numeric", month: "short" }).format(date);
+        } catch (error) {
+          return date.toLocaleDateString();
+        }
+      }
+
+      function getTodayDateValue() {
+        var today = new Date();
+        return today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
+      }
+
+      function getProgressExerciseNames() {
+        var names = [];
+        var seen = {};
+        data.history.forEach(function (session) {
+          session.exercises.forEach(function (exercise) {
+            var hasWeightedSet = exercise.sets.some(function (set) {
+              var weight = Number(set.weight);
+              return isFinite(weight) && weight > 0;
+            });
+            var key = exercise.name.trim().toLowerCase();
+            if (!hasWeightedSet || !key || seen[key]) return;
+            seen[key] = true;
+            names.push(exercise.name);
+          });
+        });
+        return names.sort(function (a, b) { return a.localeCompare(b); });
+      }
+
+      function getLiftProgress(exerciseName) {
+        var normalizedName = exerciseName.trim().toLowerCase();
+        var points = [];
+        data.history.slice().sort(function (a, b) {
+          return new Date(a.completedAt).getTime() - new Date(b.completedAt).getTime();
+        }).forEach(function (session) {
+          var bestSet = null;
+          session.exercises.forEach(function (exercise) {
+            if (exercise.name.trim().toLowerCase() !== normalizedName) return;
+            exercise.sets.forEach(function (set) {
+              var weight = Number(set.weight);
+              var reps = Number(set.reps);
+              if (!isFinite(weight) || weight <= 0) return;
+              if (!bestSet || weight > bestSet.weight || (weight === bestSet.weight && reps > bestSet.reps)) {
+                bestSet = { weight: weight, reps: isFinite(reps) ? reps : 0 };
+              }
+            });
+          });
+          if (bestSet) points.push({ completedAt: session.completedAt, weight: bestSet.weight, reps: bestSet.reps });
+        });
+        return points;
+      }
+
+      function renderLiftProgress() {
+        var exerciseNames = getProgressExerciseNames();
+        if (!exerciseNames.length) {
+          selectedProgressExercise = "";
+          return '<article class="card progress-card"><h2>Lift progress</h2><p class="meta">Complete at least two weighted workouts to start seeing your lifts change over time.</p><div class="empty-inline">No completed weighted lifts yet.</div></article>';
+        }
+        if (!exerciseNames.some(function (name) { return name === selectedProgressExercise; })) selectedProgressExercise = exerciseNames[0];
+        var options = exerciseNames.map(function (name) {
+          return '<option value="' + escapeHtml(name) + '"' + (name === selectedProgressExercise ? ' selected' : '') + '>' + escapeHtml(name) + '</option>';
+        }).join("");
+        var allPoints = getLiftProgress(selectedProgressExercise);
+        var points = allPoints.slice(-7);
+        var latest = allPoints[allPoints.length - 1];
+        var first = allPoints[0];
+        var best = allPoints.reduce(function (highest, point) { return Math.max(highest, point.weight); }, 0);
+        var change = latest.weight - first.weight;
+        var changeText = (change > 0 ? "+" : "") + formatWeightValue(change) + " kg";
+        var values = points.map(function (point) { return point.weight; });
+        var min = Math.min.apply(Math, values);
+        var max = Math.max.apply(Math, values);
+        var range = max - min;
+        var bars = points.map(function (point) {
+          var height = range ? 32 + ((point.weight - min) / range) * 56 : 62;
+          return '<div class="lift-point" title="' + escapeHtml(formatDate(point.completedAt)) + ': ' + escapeHtml(formatWeightValue(point.weight)) + ' kg × ' + escapeHtml(point.reps) + '"><div class="lift-bar-wrap"><div class="lift-bar" style="height:' + height.toFixed(1) + '%"><strong>' + escapeHtml(formatWeightValue(point.weight)) + '</strong></div></div><time>' + escapeHtml(formatShortDate(point.completedAt)) + '</time></div>';
+        }).join("");
+        return '<article class="card progress-card"><h2>Lift progress</h2><p class="meta">Your heaviest completed set from each workout.</p><label class="visually-hidden" for="progressExerciseSelect">Exercise to chart</label><select class="progress-select" id="progressExerciseSelect">' + options + '</select><div class="progress-stats"><div class="progress-stat"><span>Latest</span><strong>' + escapeHtml(formatWeightValue(latest.weight)) + ' kg</strong></div><div class="progress-stat"><span>Best</span><strong>' + escapeHtml(formatWeightValue(best)) + ' kg</strong></div><div class="progress-stat"><span>Change</span><strong class="' + (change > 0 ? 'positive' : '') + '">' + escapeHtml(changeText) + '</strong></div></div><div class="lift-chart" style="--point-count:' + points.length + '" aria-label="' + escapeHtml(selectedProgressExercise) + ' weight progress">' + bars + '</div><p class="meta">Showing ' + plural(points.length, "recent workout") + (allPoints.length > points.length ? " of " + allPoints.length : "") + '.</p></article>';
+      }
+
+      function renderBodyWeightTracker() {
+        var entries = data.bodyWeights.slice().sort(function (a, b) {
+          return b.date.localeCompare(a.date);
+        });
+        var summary = "";
+        if (entries.length) {
+          var latest = entries[0];
+          var oldest = entries[entries.length - 1];
+          var change = latest.weight - oldest.weight;
+          var changeText = entries.length > 1 ? ((change > 0 ? "+" : "") + formatWeightValue(change) + " kg since first entry") : "First entry";
+          summary = '<div class="weight-summary"><strong>' + escapeHtml(formatWeightValue(latest.weight)) + ' kg</strong><span>' + escapeHtml(changeText) + '</span></div>';
+        }
+        var list = entries.map(function (entry) {
+          return '<div class="weight-entry"><time datetime="' + escapeHtml(entry.date) + '">' + escapeHtml(formatShortDate(entry.date)) + '</time><strong>' + escapeHtml(formatWeightValue(entry.weight)) + ' kg</strong><button type="button" data-action="delete-body-weight" data-weight-id="' + escapeHtml(entry.id) + '" aria-label="Delete body weight from ' + escapeHtml(formatShortDate(entry.date)) + '">×</button></div>';
+        }).join("");
+        return '<article class="card progress-card"><h2>Body weight</h2><p class="meta">Log your weight whenever you want. Adding the same date updates that entry.</p><form class="weight-form" id="bodyWeightForm"><label class="weight-field">Date<input id="bodyWeightDate" type="date" required value="' + getTodayDateValue() + '"></label><label class="weight-field">Weight (kg)<input id="bodyWeightValue" type="number" inputmode="decimal" min="1" max="500" step="0.1" placeholder="e.g. 82.5" required></label><button class="primary" type="submit">Save weight</button></form>' + summary + (list ? '<div class="weight-list">' + list + '</div>' : '<div class="empty-inline">No body-weight entries yet.</div>') + '</article>';
+      }
+
+      function renderProgress() {
+        document.getElementById("progressContent").innerHTML = '<div class="progress-grid">' + renderLiftProgress() + renderBodyWeightTracker() + '</div>';
+      }
+
       function renderAll() {
         renderRoutines();
         renderActive();
         renderHistory();
+        renderProgress();
       }
 
       function switchView(view) {
@@ -2059,6 +2404,27 @@
         reader.readAsText(file);
       }
 
+      function addOneTimeToWorkout(name) {
+        if (!data.activeWorkout) return false;
+        var normalizedName = name.trim().toLowerCase();
+        var alreadyAdded = data.activeWorkout.exercises.some(function (exercise) {
+          return exercise.oneTime && exercise.name.trim().toLowerCase() === normalizedName;
+        });
+        if (alreadyAdded) {
+          alert(name + " is already in this workout.");
+          return false;
+        }
+        data.activeWorkout.exercises.push({
+          exerciseId: makeId("one_time"),
+          name: name.trim().slice(0, 80),
+          oneTime: true,
+          sets: [{ weight: "", reps: "", rpe: "", dropSet: false }]
+        });
+        saveData({ toast: name.trim() + " added for today" });
+        renderActive();
+        return true;
+      }
+
       async function handleAction(button) {
         var action = button.getAttribute("data-action");
         var routineId = button.getAttribute("data-routine-id");
@@ -2158,15 +2524,19 @@
           var oneTimeScrollPosition = window.scrollY;
           var oneTimeName = await promptForOneTimeExercise();
           if (!oneTimeName || !data.activeWorkout) return;
-          data.activeWorkout.exercises.push({
-            exerciseId: makeId("one_time"),
-            name: oneTimeName,
-            oneTime: true,
-            sets: [{ weight: "", reps: "", rpe: "", dropSet: false }]
-          });
-          saveData({ toast: oneTimeName + " added for today" });
-          renderActive();
-          restoreScrollPosition(oneTimeScrollPosition);
+          if (addOneTimeToWorkout(oneTimeName)) restoreScrollPosition(oneTimeScrollPosition);
+          return;
+        }
+
+        if (action === "add-saved-one-time" && data.activeWorkout) {
+          var savedOneTimeSelect = document.getElementById("savedOneTimeExercise");
+          var savedOneTimeName = savedOneTimeSelect && savedOneTimeSelect.value;
+          if (!savedOneTimeName) {
+            alert("Choose a past extra first.");
+            return;
+          }
+          var savedExtraScrollPosition = window.scrollY;
+          if (addOneTimeToWorkout(savedOneTimeName)) restoreScrollPosition(savedExtraScrollPosition);
           return;
         }
 
@@ -2278,6 +2648,7 @@
           if (!isNaN(correctedFinishTime.getTime())) durationSession.completedAt = correctedFinishTime.toISOString();
           saveData({ toast: "Workout duration updated" });
           renderHistory();
+          renderProgress();
           return;
         }
 
@@ -2288,6 +2659,18 @@
           data.history = data.history.filter(function (item) { return item.id !== sessionId; });
           saveData({ toast: "Workout deleted" });
           renderHistory();
+          renderProgress();
+          renderActive();
+          return;
+        }
+
+        if (action === "delete-body-weight") {
+          var weightId = button.getAttribute("data-weight-id");
+          var weightEntry = data.bodyWeights.find(function (entry) { return entry.id === weightId; });
+          if (!weightEntry || !await askConfirm("Delete body-weight entry?", formatWeightValue(weightEntry.weight) + " kg from " + formatShortDate(weightEntry.date) + " will be removed.", "Delete entry")) return;
+          data.bodyWeights = data.bodyWeights.filter(function (entry) { return entry.id !== weightId; });
+          saveData({ toast: "Body-weight entry deleted" });
+          renderProgress();
           return;
         }
 
@@ -2347,6 +2730,35 @@
       document.getElementById("activeContent").addEventListener("change", function (event) {
         var restSelect = event.target.closest("#restDurationSelect");
         if (restSelect) handleRestDurationSelection(restSelect.value);
+      });
+
+      document.getElementById("progressContent").addEventListener("change", function (event) {
+        var exerciseSelect = event.target.closest("#progressExerciseSelect");
+        if (!exerciseSelect) return;
+        selectedProgressExercise = exerciseSelect.value;
+        renderProgress();
+      });
+
+      document.getElementById("progressContent").addEventListener("submit", function (event) {
+        var form = event.target.closest("#bodyWeightForm");
+        if (!form) return;
+        event.preventDefault();
+        var dateValue = document.getElementById("bodyWeightDate").value;
+        var weightValue = Number(document.getElementById("bodyWeightValue").value);
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dateValue) || isNaN(new Date(dateValue + "T12:00:00").getTime())) {
+          alert("Choose a valid date.");
+          return;
+        }
+        if (!isFinite(weightValue) || weightValue <= 0 || weightValue > 500) {
+          alert("Enter a valid body weight between 1 and 500 kg.");
+          return;
+        }
+        var roundedWeight = Math.round(weightValue * 10) / 10;
+        var existingEntry = data.bodyWeights.find(function (entry) { return entry.date === dateValue; });
+        if (existingEntry) existingEntry.weight = roundedWeight;
+        else data.bodyWeights.push({ id: makeId("weight"), date: dateValue, weight: roundedWeight });
+        saveData({ toast: existingEntry ? "Body weight updated" : "Body weight saved" });
+        renderProgress();
       });
 
       document.getElementById("importFile").addEventListener("change", function (event) {
